@@ -1,9 +1,9 @@
 package main
 
 import (
-  "os"
-  "log"
-  "bufio"
+	"os"
+	"log"
+	"bufio"
 	"fmt"
 	"strings"
 	"regexp"
@@ -22,15 +22,15 @@ func convert(str string) (integer int) {
 }
 
 func calculate(data string) (power int) {
-  data_slice := strings.Split(data, ":")
+	data_slice := strings.Split(data, ":")
 	re := regexp.MustCompile("[0-9]+")
 	games := strings.Replace(data_slice[1], ";", ",", -1)
-  games_split := strings.Split(games, ",")
+	games_split := strings.Split(games, ",")
 	red_min := 0
 	green_min := 0
 	blue_min := 0
 
-  for i := 0; i < len(games_split); i++ {
+	for i := 0; i < len(games_split); i++ {
 		if strings.Contains(games_split[i], "red") {
 			red_string := re.FindAllString(games_split[i], -1)
 			red := convert(red_string[0])
@@ -49,8 +49,8 @@ func calculate(data string) (power int) {
 			if blue > blue_min {
 				blue_min = blue
 			}
-		} 
-  }
+		}
+	}
 
 	power = red_min * green_min * blue_min
 	return
@@ -58,31 +58,31 @@ func calculate(data string) (power int) {
 
 func sum(values []int) (sum int) {
 	sum = 0
-  values_length := len(values)
+	values_length := len(values)
 
-  for i := 0; i < values_length; i++ {
-    sum += values[i]
-  }
+	for i := 0; i < values_length; i++ {
+		sum += values[i]
+	}
 
 	return
 }
 
 func main() {
-  data, err := os.Open("../actual.dat")
+	data, err := os.Open("../actual.dat")
 
-  if err != nil {
-    log.Fatal(err)
-  }
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  defer data.Close()
+	defer data.Close()
 
-  scanner := bufio.NewScanner(data)
+	scanner := bufio.NewScanner(data)
 	var powers []int
 
-  for scanner.Scan() {
-    power := calculate(scanner.Text())
+	for scanner.Scan() {
+		power := calculate(scanner.Text())
 		powers = append(powers, power)
-  }
+	}
 
 	fmt.Println("sum: ", sum(powers))
 }
