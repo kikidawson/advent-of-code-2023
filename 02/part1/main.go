@@ -21,38 +21,37 @@ func convert(str string) (integer int) {
 	return
 }
 
-func calculate(data string) (id int) {
-	data_slice := strings.Split(data, ":")
+func set_max(gm string, max int, id int) (nid int) {
 	re := regexp.MustCompile("[0-9]+")
-	id = convert(re.FindAllString(data_slice[0], -1)[0])
-	games := strings.Replace(data_slice[1], ";", ",", -1)
-	games_split := strings.Split(games, ",")
-	red_max := 12
-	green_max := 13
-	blue_max := 14
+	str := re.FindAllString(gm, -1)
+	clr := convert(str[0])
+  nid = id
 
-	for i := 0; i < len(games_split); i++ {
-		if strings.Contains(games_split[i], "red") {
-			red_string := re.FindAllString(games_split[i], -1)
-			red := convert(red_string[0])
-			if red > red_max {
-				id = 0
-				return
-			}
-		} else if strings.Contains(games_split[i], "green") {
-			green_string := re.FindAllString(games_split[i], -1)
-			green := convert(green_string[0])
-			if green > green_max {
-				id = 0
-				return
-			}
-		} else if strings.Contains(games_split[i], "blue") {
-			blue_string := re.FindAllString(games_split[i], -1)
-			blue := convert(blue_string[0])
-			if blue > blue_max {
-				id = 0
-				return
-			}
+	if clr > max {
+		nid = 0
+	}
+
+	return
+}
+
+func calculate(data string) (id int) {
+	dslice := strings.Split(data, ":")
+	re := regexp.MustCompile("[0-9]+")
+	id = convert(re.FindAllString(dslice[0], -1)[0])
+	gm := strings.Replace(dslice[1], ";", ",", -1)
+	draw := strings.Split(gm, ",")
+
+	rmax := 12
+	gmax := 13
+	bmax := 14
+
+	for i := 0; i < len(draw); i++ {
+		if strings.Contains(draw[i], "red") {
+			id = set_max(draw[i], rmax, id)
+		} else if strings.Contains(draw[i], "green") {
+			id = set_max(draw[i], gmax, id)
+		} else if strings.Contains(draw[i], "blue") {
+			id = set_max(draw[i], bmax, id)
 		}
 	}
 
@@ -61,9 +60,9 @@ func calculate(data string) (id int) {
 
 func sum(values []int) (sum int) {
 	sum = 0
-	values_length := len(values)
+	vlen := len(values)
 
-	for i := 0; i < values_length; i++ {
+	for i := 0; i < vlen; i++ {
 		sum += values[i]
 	}
 

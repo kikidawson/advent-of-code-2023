@@ -10,57 +10,58 @@ import (
 	"strconv"
 )
 
-func convert(str string) (integer int) {
+func convert(str string) (in int) {
 	conv, err := strconv.Atoi(str)
 
 	if err != nil {
 		fmt.Println(err)
 	}
   
-	integer = conv
+	in = conv
+	return
+}
+
+func set_min(draw string, min int) (nmin int) {
+	re := regexp.MustCompile("[0-9]+")
+	str := re.FindAllString(draw, -1)
+	clr := convert(str[0])
+  nmin = min
+
+	if clr > min {
+		nmin = clr
+	}
+
 	return
 }
 
 func calculate(data string) (power int) {
-	data_slice := strings.Split(data, ":")
-	re := regexp.MustCompile("[0-9]+")
-	games := strings.Replace(data_slice[1], ";", ",", -1)
-	games_split := strings.Split(games, ",")
-	red_min := 0
-	green_min := 0
-	blue_min := 0
+	dslice := strings.Split(data, ":")
+	gm := strings.Replace(dslice[1], ";", ",", -1)
+	draw := strings.Split(gm, ",")
 
-	for i := 0; i < len(games_split); i++ {
-		if strings.Contains(games_split[i], "red") {
-			red_string := re.FindAllString(games_split[i], -1)
-			red := convert(red_string[0])
-			if red > red_min {
-				red_min = red
-			}
-		} else if strings.Contains(games_split[i], "green") {
-			green_string := re.FindAllString(games_split[i], -1)
-			green := convert(green_string[0])
-			if green > green_min {
-				green_min = green
-			}
-		} else if strings.Contains(games_split[i], "blue") {
-			blue_string := re.FindAllString(games_split[i], -1)
-			blue := convert(blue_string[0])
-			if blue > blue_min {
-				blue_min = blue
-			}
+	rmin := 0
+	gmin := 0
+	bmin := 0
+
+	for i := 0; i < len(draw); i++ {
+		if strings.Contains(draw[i], "red") {
+			rmin = set_min(draw[i], rmin)
+		} else if strings.Contains(draw[i], "green") {
+			gmin = set_min(draw[i], gmin)
+		} else if strings.Contains(draw[i], "blue") {
+			bmin = set_min(draw[i], bmin)
 		}
 	}
 
-	power = red_min * green_min * blue_min
+	power = rmin * gmin * bmin
 	return
 }
 
 func sum(values []int) (sum int) {
 	sum = 0
-	values_length := len(values)
+	vlen := len(values)
 
-	for i := 0; i < values_length; i++ {
+	for i := 0; i < vlen; i++ {
 		sum += values[i]
 	}
 
